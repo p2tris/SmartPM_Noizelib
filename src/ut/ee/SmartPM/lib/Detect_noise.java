@@ -40,5 +40,10 @@ public class Detect_noise {
                     return 0;
 
     }
+    
+    public void stop() {
+    	mRecorder.stop();
+    	mRecorder.release();
+    }
 	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.TextView;
 
 public class MyClass implements LibInterface{
@@ -33,6 +34,7 @@ public class MyClass implements LibInterface{
    	}
 
 	private void updateDisplay(double status) {
+		
 		Boolean isListed = false;
 	    for (rulesObject<Double, Double, String> rulesObject : volList) {
 			if ((status > rulesObject.getLow()) && (status < rulesObject.getHigh())) {
@@ -47,12 +49,21 @@ public class MyClass implements LibInterface{
 	    }
 	        mAutoLabel.setText(String.valueOf(status));
 	}
+		
 	
 	private Runnable mPollTask = new Runnable() {
         public void run() {
+        	if(mAutoLabel.isShown() == false){
+				Log.d("EXIT","autolable deleted");
+				mHandler.removeCallbacks(mPollTask);
+				mSensor.stop();
+				Thread.currentThread().interrupt();
+				Log.d("EXIT","Mic released");
+        	} else {
                 double amp = mSensor.getAmplitude();
                 updateDisplay(amp);
                 mHandler.postDelayed(mPollTask, POLL_INTERVAL);
+        	}
         }
 	};
 
